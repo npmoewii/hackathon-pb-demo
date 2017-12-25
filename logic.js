@@ -77,7 +77,7 @@ function Station(name){
 }
 
 function StationSelector(){
-	this.init = fucntion(){
-		//TODO INIT STATION SELECTOR
+	this.init = function(){
+		//TODO INIT STATION SELECTION
 	}
 }
