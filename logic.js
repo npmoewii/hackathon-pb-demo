@@ -4,7 +4,7 @@ window.onload = function(){
 	
 
 	// test
-	var pop = new PopBus(1,1,0,0,true,600,1200,"หอใน");
+	var pop = new PopBus(1,123,1,0,0,true,600,1200,"หอใน");
 	pop.createHtmlElement(document.body);
 	console.log(pop.cntNextStation("สยาม"));
 	setTimeout(function(){
@@ -34,8 +34,9 @@ function setProgress(id,value) {
 
 // CLASS
 
-function PopBus(id,line,lat,long,status,weight,maxWeight,station){
+function PopBus(id,busid,line,lat,long,status,weight,maxWeight,station){
 	this.id = id;
+	this.busid = busid;
 	this.line = line;
 	this.lat = lat;
 	this.long = long;
