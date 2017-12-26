@@ -1,19 +1,21 @@
 window.onload = function(){
-	var station = [];
-	var popbus = [];
+	
 	
 
 	// test
-	var siam = new Station("สยาม");
-	var pop = new PopBus(1,1,0,0,true,600,1200,"หอใน");
+	var siam = addNewStation("สยาม");
+	var siam2 = addNewStation("สยาม2");
+	var sel = new StationSelector(station);
+	sel.createHtmlElement(document.body);
+	var pop = addNewPopBus(1,1,0,0,true,600,1200,"หอใน");
 	siam.addPopBus(pop);
-	siam.createHtmlElement(document.body);
 	console.log(pop.cntNextStation("สยาม"));
 	setTimeout(function(){
 		pop.updateData(2,0,0,false,1100,"bbb");
 		siam.updateHtmlElement();
 	}
 	,5000);
+	sel.init();
 }
 
 // FUNCTION
@@ -25,6 +27,9 @@ const stationName4 = ["fff","ggg"];
 const stationName5 = ["hhh","iii"];
 
 var curId = 0;
+var station = [];
+var popbus = [];
+
 
 function setProgress(id,value) {
 	let pro = document.getElementById(id);
@@ -36,6 +41,26 @@ function setProgress(id,value) {
 		pro.style.width = pos + '%';
 		if(pos === value || pos === 0) clearInterval(animate);
 	},10)
+}
+
+function hideAllStation(){
+	for(let i=0;i<station.length;i++){
+		let tmp = document.getElementById(station[i].name);
+		tmp.style.display = "none";
+	}
+}
+
+function addNewStation(name){
+	let tmp = new Station(name);
+	station.push(tmp);
+	tmp.createHtmlElement(document.body);
+	return tmp;
+}
+
+function addNewPopBus(BusId,line,lat,long,status,weight,maxWeight,station){
+	let tmp = new PopBus(BusId,line,lat,long,status,weight,maxWeight,station);
+	popbus.push(tmp);
+	return tmp;
 }
 
 // CLASS
@@ -93,7 +118,7 @@ class PopBusInStation {
 	constructor(id,popbus){
 		this.id = id;
 		this.popbus = popbus;
-	
+		this.wasCreate = false;
 	}
 	
 	updateProgressBar(){
@@ -112,6 +137,7 @@ class PopBusInStation {
 	}
 
 	createHtmlElement(root){
+		this.wasCreate = true;
 		var div = document.createElement("div");
 		div.className = "popBusBroder";
 		div.id = this.id;
@@ -150,8 +176,10 @@ class Station{
 	}
 
 	addPopBus(popBus){
-		var tmp = new PopBusInStation(curId++,popBus)
+		var tmp = new PopBusInStation(curId++,popBus);
 		this.popBusQueue.push(tmp);
+		this.updateHtmlElement();
+		tmp.updateProgressBar();
 	}
 	
 	compare(popBusA,popBusb){
@@ -170,7 +198,11 @@ class Station{
 	}
 
 	updateHtmlElement(){
+		var div = document.getElementById(this.name);
 		for(let i=0;i<this.popBusQueue.length;i++){
+			if(!this.popBusQueue[i].wasCreate){
+				this.popBusQueue[i].createHtmlElement(div);
+			}
 			this.popBusQueue[i].updateHtmlElement();
 		}
 	}
@@ -193,5 +225,37 @@ class Station{
 }
 
 class StationSelector{
-	
+	constructor(stationlist){
+		this.station = stationlist;
+	}
+
+	init(){
+		for(let i=1;i<station.length;i++){
+		let tmp = document.getElementById(station[i].name);
+		tmp.style.display = "none";
+		}
+	}
+
+	createHtmlElement(root){
+		var div = document.createElement("div");
+		div.className = "select-style";
+		var sel = document.createElement("select");
+		sel.className = "select";
+		sel.id = "select";
+		sel.addEventListener("change",function(){
+			let e = document.getElementById("select");
+			let selected = e.options[e.selectedIndex].value;
+			hideAllStation();
+			let tar = document.getElementById(selected);
+			tar.style.display = "block";
+		},false);
+		for(let i=0;i<this.station.length;i++){
+			var tmp = document.createElement("option");
+			tmp.value = this.station[i].name;
+			tmp.text = this.station[i].name;
+			sel.appendChild(tmp);
+		}
+		div.appendChild(sel);
+		root.appendChild(div);
+	}
 }
