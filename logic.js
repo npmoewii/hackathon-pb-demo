@@ -5,17 +5,19 @@ window.onload = function(){
 	// test
 	var siam = addNewStation("สยาม");
 	var siam2 = addNewStation("สยาม2");
-	var sel = new StationSelector(station);
-	sel.createHtmlElement(document.body);
 	var pop = addNewPopBus(1,1,0,0,true,600,1200,"หอใน");
 	siam.addPopBus(pop);
+	
 	console.log(pop.cntNextStation("สยาม"));
 	setTimeout(function(){
 		pop.updateData(2,0,0,false,1100,"bbb");
 		siam.updateHtmlElement();
 	}
 	,5000);
-	sel.init();
+
+	var selector = new StationSelector(station);
+	selector.init();
+	selector.createHtmlElement(document.body);
 }
 
 // FUNCTION
@@ -119,6 +121,7 @@ class PopBusInStation {
 		this.id = id;
 		this.popbus = popbus;
 		this.wasCreate = false;
+
 	}
 	
 	updateProgressBar(){
@@ -132,7 +135,7 @@ class PopBusInStation {
 		var info = document.getElementById(this.id+"info");
 		title.innerHTML = "สาย "+this.popbus.line;
 		img.src = "./resource/demo-bus-pic.jpg";
-		info.innerHTML = this.popbus.personCnt+"/"+this.popbus.maxPersonCnt+"คน";
+		info.innerHTML = this.popbus.personCnt+"/"+this.popbus.maxPersonCnt+" คน";
 		this.updateProgressBar();
 	}
 
