@@ -88,8 +88,7 @@ class PopBus {
 class PopBusInStation {
 	constructor(id,popbus){
 		this.id = id;
-	this.popbus = popbus;
-	
+		this.popbus = popbus;
 	}
 	
 	updateProgressBar(){
@@ -103,7 +102,7 @@ class PopBusInStation {
 		var info = document.getElementById(this.id+"info");
 		title.innerHTML = "สาย "+this.popbus.line;
 		img.src = "./resource/demo-bus-pic.jpg";
-		info.innerHTML = this.popbus.personCnt+"/"+this.popbus.maxPersonCnt+"คน";
+		info.innerHTML = this.popbus.personCnt+"/"+this.popbus.maxPersonCnt+" คน";
 		this.updateProgressBar();
 	}
 
