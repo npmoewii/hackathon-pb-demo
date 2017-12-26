@@ -38,8 +38,9 @@ function setProgress(id,value) {
 
 
 class PopBus {
-	constructor(BusId,lat,long,status,weight,maxWeight,station) {
+	constructor(BusId,line,lat,long,status,weight,maxWeight,station) {
 		this.BusId = BusId
+		this.line = line
 		this.lat = lat
 		this.long = long
 		this.status
@@ -56,11 +57,11 @@ class PopBus {
 	}
 	getStationLine(){
 		let stationName;
-		if(line === 1) stationName = stationName1;
-		if(line === 2) stationName = stationName2;
-		if(line === 3) stationName = stationName3;
-		if(line === 4) stationName = stationName4;
-		if(line === 5) stationName = stationName5;
+		if(this.line === 1) stationName = stationName1;
+		if(this.line === 2) stationName = stationName2;
+		if(this.line === 3) stationName = stationName3;
+		if(this.line === 4) stationName = stationName4;
+		if(this.line === 5) stationName = stationName5;
 		return stationName;
 	}
 	cntNextStation(name) {
@@ -73,18 +74,29 @@ class PopBus {
 			cnt++;
 		}
 	}
-	
+	updateData(line,lat,long,status,weight,station){
+		this.line = line;
+		this.lat = lat;
+		this.long = long;
+		this.status = status;
+		this.weight = weight;
+		this.station = station;
+		this.personCnt = Math.floor(weight/60);
+	}
 }
 
-function PopBusInStation(id,popbus){
-	this.id = id;
+class PopBusInStation {
+	constructor(id,popbus){
+		this.id = id;
 	this.popbus = popbus;
-
-	this.updateProgressBar = function(){
+	
+	}
+	
+	updateProgressBar(){
 		setProgress(this.id+"bar",this.popbus.personCnt/this.popbus.maxPersonCnt*100);
 	}
 
-	this.updateHtmlElement = function(){
+	updateHtmlElement(){
 		var div = document.getElementById(this.id);
 		var title = document.getElementById(this.id+"title");
 		var img = document.getElementById(this.id+"img");
@@ -95,7 +107,7 @@ function PopBusInStation(id,popbus){
 		this.updateProgressBar();
 	}
 
-	this.createHtmlElement = function(root){
+	createHtmlElement(root){
 		var div = document.createElement("div");
 		div.className = "popBusBroder";
 		div.id = this.id;
@@ -127,11 +139,13 @@ function PopBusInStation(id,popbus){
 }
 
 
-function Station(name){
-	this.name = name;
-	this.popBusQueue = [];
-
-	this.compare = function(popBusA,popBusb){
+class Station{
+	constructor(name){
+		this.name = name;
+		this.popBusQueue = [];
+	}
+	
+	compare(popBusA,popBusb){
 		let cntA = popBusA.cntNextStation(this.name);
 		let cntB = popBusB.cntNextStation(this.name);
 		if(cntA === -1 && cntB === -1) return 0;
@@ -146,7 +160,7 @@ function Station(name){
 		}
 	}
 
-	this.createHtmlElement = function(root){
+	createHtmlElement(root){
 		var div = document.createElement("div");
 		div.className = "popBusBroder";
 		div.id = this.name;
@@ -162,8 +176,6 @@ function Station(name){
 	}
 }
 
-function StationSelector(){
-	this.init = function(){
-		//TODO INIT STATION SELECTION
-	}
+class StationSelector{
+	
 }
