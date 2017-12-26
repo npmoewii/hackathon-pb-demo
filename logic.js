@@ -14,6 +14,10 @@ window.onload = function(){
 		siam.updateHtmlElement();
 	}
 	,5000);
+
+	$('#station-result').change(function(){
+		alert('Choosing ' + $('#station-result option:selected').text());
+	});
 }
 
 // FUNCTION
