@@ -34,17 +34,24 @@ function setProgress(id,value) {
 
 // CLASS
 
-function PopBus(id,line,lat,long,status,weight,maxWeight,station){
-	this.id = id;
-	this.line = line;
-	this.lat = lat;
-	this.long = long;
-	this.status;
-	this.station = station;
-	this.personCnt = Math.floor(weight/60);
-	this.maxPersonCnt = Math.floor(maxWeight/60);
-
-	this.getStationLine = function(){
+class PopBus {
+	constructor(id,lat,long,status,weight,maxWeight,station) {
+		this.id = id
+		this.lat = lat
+		this.long = long
+		this.status
+		this.station = station
+		this.personCnt = Math.floor(weight/60)
+		this.maxPersonCnt = Math.floor(maxWeight/60)
+	}
+	findPos(name) {
+		let stationName = this.getStationLine();
+		for(let i=0;i<stationName.length;i++){
+			if(stationName[i] === name) return i;	
+		}
+		return -1;
+	}
+	getStationLine(){
 		let stationName;
 		if(line === 1) stationName = stationName1;
 		if(line === 2) stationName = stationName2;
@@ -53,16 +60,7 @@ function PopBus(id,line,lat,long,status,weight,maxWeight,station){
 		if(line === 5) stationName = stationName5;
 		return stationName;
 	}
-
-	this.findPos = function(name){
-		let stationName = this.getStationLine();
-		for(let i=0;i<stationName.length;i++){
-			if(stationName[i] === name) return i;	
-		}
-		return -1;
-	}
-
-	this.cntNextStation = function(name){
+	cntNextStation(name) {
 		let cnt = 0;
 		let start = this.findPos(this.station);
 		let stationName = this.getStationLine();
@@ -72,27 +70,7 @@ function PopBus(id,line,lat,long,status,weight,maxWeight,station){
 			cnt++;
 		}
 	}
-
-	this.getCurStation = function(){
-		//TOD RETURN CURRENT STATION FORM LAT AND LONG 
-	}
-
-	this.updateData = function(line,lat,long,status,weight,station){
-		this.line = line;
-		this.lat = lat;
-		this.long = long;
-		this.status = status;
-		this.weight = weight;
-		this.station = station;
-		this.personCnt = Math.floor(weight/60);
-		this.updateHtmlElement();
-	}
-
-	this.updateProgressBar = function(){
-		setProgress(this.id+"bar",this.personCnt/this.maxPersonCnt*100);
-	}
-
-	this.updateHtmlElement = function(){
+	updateHtmlElement(){
 		var div = document.getElementById(this.id);
 		var title = document.getElementById(this.id+"title");
 		var img = document.getElementById(this.id+"img");
@@ -102,8 +80,20 @@ function PopBus(id,line,lat,long,status,weight,maxWeight,station){
 		info.innerHTML = this.personCnt+"/"+this.maxPersonCnt+"คน";
 		this.updateProgressBar();
 	}
-
-	this.createHtmlElement = function(root){
+	updateData(line,lat,long,status,weight,station){
+		this.line = line;
+		this.lat = lat;
+		this.long = long;
+		this.status = status;
+		this.weight = weight;
+		this.station = station;
+		this.personCnt = Math.floor(weight/60);
+		this.updateHtmlElement();
+	}
+	updateProgressBar(){
+		setProgress(this.id+"bar",this.personCnt/this.maxPersonCnt*100);
+	}
+	createHtmlElement() {
 		var div = document.createElement("div");
 		div.className = "popBusBroder";
 		div.id = this.id;
@@ -133,34 +123,6 @@ function PopBus(id,line,lat,long,status,weight,maxWeight,station){
 		this.updateProgressBar();
 	}
 }
-/*
-class PopBus {
-	constructor(id,lat,long,status,weight,maxWeight,station) {
-		this.id = id
-		this.lat = lat
-		this.long = long
-		this.status
-		this.station = station
-		this.personCnt = Math.floor(weight/60)
-		this.maxPersonCnt = Math.floor(maxWeight/60)
-	}
-	findPos(name) {
-		for(let i=0;i<stationName.length;i++){
-			if(stationName[i] === name ) return i;
-		}
-	}
-	cntNextStation(name) {
-		let cnt = 0
-		let start = this.findPos(this.station)
-		while(cnt < stationName.length) {
-			if(stationName[(start+cnt)%stationName.length] === name) return cnt;
-			cnt++
-		}
-	}
-	createHtmlElement() {
-
-	}
-}*/
 
 class Station {
 	constructor(name) {
