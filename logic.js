@@ -4,11 +4,13 @@ window.onload = function(){
 	
 
 	// test
-	var pop = new PopBus(1,123,1,0,0,true,600,1200,"หอใน");
-	pop.createHtmlElement(document.body);
+	var pop = new PopBus(1,1,0,0,true,600,1200,"หอใน");
+	var pops = new PopBusInStation(1,pop);
+	pops.createHtmlElement(document.body);
 	console.log(pop.cntNextStation("สยาม"));
 	setTimeout(function(){
-		pop.updateData(2,0,0,false,1100,"bbb")}
+		pop.updateData(2,0,0,false,1100,"bbb");
+		pops.updateHtmlElement();}
 	,5000);
 }
 
@@ -34,9 +36,8 @@ function setProgress(id,value) {
 
 // CLASS
 
-function PopBus(id,busid,line,lat,long,status,weight,maxWeight,station){
-	this.id = id;
-	this.busid = busid;
+function PopBus(busId,line,lat,long,status,weight,maxWeight,station){
+	this.busId = busId;
 	this.line = line;
 	this.lat = lat;
 	this.long = long;
@@ -86,11 +87,15 @@ function PopBus(id,busid,line,lat,long,status,weight,maxWeight,station){
 		this.weight = weight;
 		this.station = station;
 		this.personCnt = Math.floor(weight/60);
-		this.updateHtmlElement();
 	}
+}
+
+function PopBusInStation(id,popbus){
+	this.id = id;
+	this.popbus = popbus;
 
 	this.updateProgressBar = function(){
-		setProgress(this.id+"bar",this.personCnt/this.maxPersonCnt*100);
+		setProgress(this.id+"bar",this.popbus.personCnt/this.popbus.maxPersonCnt*100);
 	}
 
 	this.updateHtmlElement = function(){
@@ -98,9 +103,9 @@ function PopBus(id,busid,line,lat,long,status,weight,maxWeight,station){
 		var title = document.getElementById(this.id+"title");
 		var img = document.getElementById(this.id+"img");
 		var info = document.getElementById(this.id+"info");
-		title.innerHTML = "สาย "+this.line;
+		title.innerHTML = "สาย "+this.popbus.line;
 		img.src = "./resource/demo-bus-pic.jpg";
-		info.innerHTML = this.personCnt+"/"+this.maxPersonCnt+"คน";
+		info.innerHTML = this.popbus.personCnt+"/"+this.popbus.maxPersonCnt+"คน";
 		this.updateProgressBar();
 	}
 
@@ -110,7 +115,7 @@ function PopBus(id,busid,line,lat,long,status,weight,maxWeight,station){
 		div.id = this.id;
 		var title = document.createElement("h4");
 		title.className = "popBusTitle";
-		title.innerHTML = "สาย "+this.line;
+		title.innerHTML = "สาย "+this.popbus.line;
 		title.id = this.id+"title";
 		div.appendChild(title); 
 		var img = document.createElement("img");
@@ -127,47 +132,19 @@ function PopBus(id,busid,line,lat,long,status,weight,maxWeight,station){
 		div.appendChild(pro);
 		var info = document.createElement("p");
 		info.className = "popBusInfo";
-		info.innerHTML = this.personCnt+"/"+this.maxPersonCnt+"คน";
+		info.innerHTML = this.popbus.personCnt+"/"+this.popbus.maxPersonCnt+"คน";
 		info.id = this.id+"info";
 		div.appendChild(info);
 		root.appendChild(div);
 		this.updateProgressBar();
 	}
 }
-/*
-class PopBus {
-	constructor(id,lat,long,status,weight,maxWeight,station) {
-		this.id = id
-		this.lat = lat
-		this.long = long
-		this.status
-		this.station = station
-		this.personCnt = Math.floor(weight/60)
-		this.maxPersonCnt = Math.floor(maxWeight/60)
-	}
-	findPos(name) {
-		for(let i=0;i<stationName.length;i++){
-			if(stationName[i] === name ) return i;
-		}
-	}
-	cntNextStation(name) {
-		let cnt = 0
-		let start = this.findPos(this.station)
-		while(cnt < stationName.length) {
-			if(stationName[(start+cnt)%stationName.length] === name) return cnt;
-			cnt++
-		}
-	}
-	createHtmlElement() {
 
-	}
-}*/
+function Station(name){
+	this.name = name;
+	this.popBusQueue = [];
 
-class Station {
-	constructor(name) {
-		this.name = name
-	}
-	compare(popBusA,popBusB) {
+	this.compare = function(popBusA,popBusb){
 		let cntA = popBusA.cntNextStation(this.name);
 		let cntB = popBusB.cntNextStation(this.name);
 		if(cntA === -1 && cntB === -1) return 0;
@@ -181,14 +158,18 @@ class Station {
 			else if(popBusA.personCnt === popBusB.personCnt) return 0;
 		}
 	}
-	createHtmlElement(){
-		let div = document.createElement("div");
+
+	this.createHtmlElement = function(root){
+		var div = document.createElement("div");
 		div.className = "popBusBroder";
 		div.id = this.name;
-		let title = document.createElement("h2");
+		var title = document.createElement("h2");
 		title.className = "stationTitle";
 		title.innerHTML = "สถาณี "+this.name;
 		div.appendChild(title);
+		for(let i=0;i<popBusQueue.length;i++){
+
+		}
 		root.appendChild(div);
 		//TODO GENERATE HTML ELEMENT AND ADDED IN PRARENT
 	}
