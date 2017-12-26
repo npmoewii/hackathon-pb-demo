@@ -36,17 +36,25 @@ function setProgress(id,value) {
 
 // CLASS
 
-function PopBus(busId,line,lat,long,status,weight,maxWeight,station){
-	this.busId = busId;
-	this.line = line;
-	this.lat = lat;
-	this.long = long;
-	this.status;
-	this.station = station;
-	this.personCnt = Math.floor(weight/60);
-	this.maxPersonCnt = Math.floor(maxWeight/60);
 
-	this.getStationLine = function(){
+class PopBus {
+	constructor(BusId,lat,long,status,weight,maxWeight,station) {
+		this.BusId = BusId
+		this.lat = lat
+		this.long = long
+		this.status
+		this.station = station
+		this.personCnt = Math.floor(weight/60)
+		this.maxPersonCnt = Math.floor(maxWeight/60)
+	}
+	findPos(name) {
+		let stationName = this.getStationLine();
+		for(let i=0;i<stationName.length;i++){
+			if(stationName[i] === name) return i;	
+		}
+		return -1;
+	}
+	getStationLine(){
 		let stationName;
 		if(line === 1) stationName = stationName1;
 		if(line === 2) stationName = stationName2;
@@ -55,16 +63,7 @@ function PopBus(busId,line,lat,long,status,weight,maxWeight,station){
 		if(line === 5) stationName = stationName5;
 		return stationName;
 	}
-
-	this.findPos = function(name){
-		let stationName = this.getStationLine();
-		for(let i=0;i<stationName.length;i++){
-			if(stationName[i] === name) return i;	
-		}
-		return -1;
-	}
-
-	this.cntNextStation = function(name){
+	cntNextStation(name) {
 		let cnt = 0;
 		let start = this.findPos(this.station);
 		let stationName = this.getStationLine();
@@ -74,20 +73,7 @@ function PopBus(busId,line,lat,long,status,weight,maxWeight,station){
 			cnt++;
 		}
 	}
-
-	this.getCurStation = function(){
-		//TOD RETURN CURRENT STATION FORM LAT AND LONG 
-	}
-
-	this.updateData = function(line,lat,long,status,weight,station){
-		this.line = line;
-		this.lat = lat;
-		this.long = long;
-		this.status = status;
-		this.weight = weight;
-		this.station = station;
-		this.personCnt = Math.floor(weight/60);
-	}
+	
 }
 
 function PopBusInStation(id,popbus){
@@ -139,6 +125,7 @@ function PopBusInStation(id,popbus){
 		this.updateProgressBar();
 	}
 }
+
 
 function Station(name){
 	this.name = name;
