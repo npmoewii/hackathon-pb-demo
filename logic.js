@@ -35,8 +35,9 @@ function setProgress(id,value) {
 // CLASS
 
 class PopBus {
-	constructor(id,lat,long,status,weight,maxWeight,station) {
+	constructor(id,line,lat,long,status,weight,maxWeight,station) {
 		this.id = id
+		this.line = line
 		this.lat = lat
 		this.long = long
 		this.status
@@ -53,11 +54,11 @@ class PopBus {
 	}
 	getStationLine(){
 		let stationName;
-		if(line === 1) stationName = stationName1;
-		if(line === 2) stationName = stationName2;
-		if(line === 3) stationName = stationName3;
-		if(line === 4) stationName = stationName4;
-		if(line === 5) stationName = stationName5;
+		if(this.line === 1) stationName = stationName1;
+		if(this.line === 2) stationName = stationName2;
+		if(this.line === 3) stationName = stationName3;
+		if(this.line === 4) stationName = stationName4;
+		if(this.line === 5) stationName = stationName5;
 		return stationName;
 	}
 	cntNextStation(name) {
@@ -93,7 +94,7 @@ class PopBus {
 	updateProgressBar(){
 		setProgress(this.id+"bar",this.personCnt/this.maxPersonCnt*100);
 	}
-	createHtmlElement() {
+	createHtmlElement(root) {
 		var div = document.createElement("div");
 		div.className = "popBusBroder";
 		div.id = this.id;
