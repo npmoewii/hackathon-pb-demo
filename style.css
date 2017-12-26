@@ -4,53 +4,12 @@
 	padding: 20;
 }
 
-.header {
-	width: 100%;
-	height: 150px;
-	margin: auto;
-	text-align: center;
-	padding: 10px;
-	background-color: #ffc8d4;
-}
-
-.header-text {
-	margin: 0 auto;
-	text-align: center;
-	width: 400px;
-	display: inline-block;
-	border: 1px solid black;
-	font-size: 50px;
-	background-color: rgba(255,255,255,0.7);
-	border-radius: 10px;
-}
-
-.station {
-	width: 100%;
-	height: 50px;
-	margin: 0 auto;
-	padding: 10px;
-	position: relative;
-	text-align: center;
-}
-
-#station-result {
-	width: 250px;
-}
-
-a {
-	text-decoration: none;
-}
-
-.logo {
-	width: 26px;
-	height: 30px;
-	display: inline-block;
-	background: url('./logo.png')
-}
-
-.header-text .text {
-	display: inline-block;
-	color: #000000
+body {
+	background: url("./resource/bg.png") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
 }
 
 .progress{
@@ -121,7 +80,7 @@ a {
     margin-left: auto;
     margin-right: auto;
     border: 1px solid #ccc;
-    width: 120px;
+    width: 300px;
     border-radius: 3px;
     overflow: hidden;
     background-color: #fff;
@@ -131,7 +90,7 @@ a {
 
 .select-style:after {
     top: 50%;
-    left: 85%;
+    left: 90%;
     border: solid transparent;
     content: " ";
     height: 0;

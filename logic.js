@@ -1,6 +1,4 @@
 window.onload = function(){
-	
-	
 
 	// test
 	var siam = addNewStation("สยาม");
@@ -17,7 +15,8 @@ window.onload = function(){
 
 	var selector = new StationSelector(station);
 	selector.init();
-	selector.createHtmlElement(document.body);
+	selector.createHtmlElement(document.body);	
+
 }
 
 // FUNCTION
@@ -134,7 +133,7 @@ class PopBusInStation {
 		var img = document.getElementById(this.id+"img");
 		var info = document.getElementById(this.id+"info");
 		title.innerHTML = "สาย "+this.popbus.line;
-		img.src = "./resource/demo-bus-pic.jpg";
+		img.src = "./resource/logo.png";
 		info.innerHTML = this.popbus.personCnt+"/"+this.popbus.maxPersonCnt+" คน";
 		this.updateProgressBar();
 	}
@@ -150,7 +149,7 @@ class PopBusInStation {
 		title.id = this.id+"title";
 		div.appendChild(title); 
 		var img = document.createElement("img");
-		img.src = "./resource/demo-bus-pic.jpg";
+		img.src = "./resource/logo.png";
 		img.className = "popBusImage";
 		img.id = this.id+"img";
 		div.appendChild(img);
@@ -252,13 +251,22 @@ class StationSelector{
 			let tar = document.getElementById(selected);
 			tar.style.display = "block";
 		},false);
+		//<option value="" disabled selected hidden>กรุณาเลือกสถานี..</option>
+		var tmp = document.createElement("option");
+		tmp.value = "";
+		tmp.text = "Where are you now?";
+		tmp.selected = true;
+		tmp.disabled = true;
+		tmp.hidden = true;
+		sel.appendChild(tmp);
+
 		for(let i=0;i<this.station.length;i++){
-			var tmp = document.createElement("option");
+			tmp = document.createElement("option");
 			tmp.value = this.station[i].name;
 			tmp.text = this.station[i].name;
 			sel.appendChild(tmp);
 		}
 		div.appendChild(sel);
-		root.appendChild(div);
+		root.insertBefore(div,root.firstChild);
 	}
 }
