@@ -251,7 +251,7 @@ class StationSelector{
 			let tar = document.getElementById(selected);
 			tar.style.display = "block";
 		},false);
-		//<option value="" disabled selected hidden>กรุณาเลือกสถานี..</option>
+
 		var tmp = document.createElement("option");
 		tmp.value = "";
 		tmp.text = "Where are you now?";
@@ -267,6 +267,6 @@ class StationSelector{
 			sel.appendChild(tmp);
 		}
 		div.appendChild(sel);
-		root.insertBefore(div,root.firstChild);
+		root.insertBefore(div,root.childNodes[2]);
 	}
 }
