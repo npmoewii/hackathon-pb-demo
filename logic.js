@@ -55,6 +55,34 @@ function PopBus(id,lat,long,status,weight,maxWeight,station){
 		//TODO GENERATE HTML ELEMENT AND ADDED IN PRARENT
 	}
 }
+/*
+class PopBus {
+	constructor(id,lat,long,status,weight,maxWeight,station) {
+		this.id = id
+		this.lat = lat
+		this.long = long
+		this.status
+		this.station = station
+		this.personCnt = Math.floor(weight/60)
+		this.maxPersonCnt = Math.floor(maxWeight/60)
+	}
+	findPos(name) {
+		for(let i=0;i<stationName.length;i++){
+			if(stationName[i] === name ) return i;
+		}
+	}
+	cntNextStation(name) {
+		let cnt = 0
+		let start = this.findPos(this.station)
+		while(cnt < stationName.length) {
+			if(stationName[(start+cnt)%stationName.length] === name) return cnt;
+			cnt++
+		}
+	}
+	createHtmlElement() {
+
+	}
+}*/
 
 function Station(name){
 	this.name = name;	
@@ -75,6 +103,25 @@ function Station(name){
 		//TODO GENERATE HTML ELEMENT AND ADDED IN PRARENT
 	}
 }
+/*
+class Station {
+	constructor(name) {
+		this.name = name
+	}
+	compare(popBusA,popBusB) {
+		let cntA = popBusA.cntNextStation(this.name)
+		let cntB = popBusB.cntNextStation(this.name)
+		if(cntA > cntB) return 1
+		else if(cntA === cntB) {
+			if(popBusA.personCnt > popBusB.personCnt) return 1
+			else if(popBusA.personCnt < popBus.personCnt) return -1
+			else if(popBusA.personCnt === popBusB.personCnt) return 0
+		}
+	}
+	createHtmlElement(){
+		
+	}
+}*/
 
 function StationSelector(){
 	this.init = function(){
