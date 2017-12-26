@@ -24,6 +24,19 @@
 	border-radius: 10px;
 }
 
+.station {
+	width: 100%;
+	height: 50px;
+	margin: 0 auto;
+	padding: 10px;
+	position: relative;
+	text-align: center;
+}
+
+#station-result {
+	width: 250px;
+}
+
 a {
 	text-decoration: none;
 }
