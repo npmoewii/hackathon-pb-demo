@@ -162,11 +162,11 @@ class PopBus {
 	}
 }*/
 
-function Station(name){
-	this.name = name;
-	this.popBusQueue = [];
-
-	this.compare = function(popBusA,popBusb){
+class Station {
+	constructor(name) {
+		this.name = name
+	}
+	compare(popBusA,popBusB) {
 		let cntA = popBusA.cntNextStation(this.name);
 		let cntB = popBusB.cntNextStation(this.name);
 		if(cntA === -1 && cntB === -1) return 0;
@@ -180,12 +180,11 @@ function Station(name){
 			else if(popBusA.personCnt === popBusB.personCnt) return 0;
 		}
 	}
-
-	this.createHtmlElement = function(root){
-		var div = document.createElement("div");
+	createHtmlElement(){
+		let div = document.createElement("div");
 		div.className = "popBusBroder";
 		div.id = this.name;
-		var title = document.createElement("h2");
+		let title = document.createElement("h2");
 		title.className = "stationTitle";
 		title.innerHTML = "สถาณี "+this.name;
 		div.appendChild(title);
@@ -193,25 +192,6 @@ function Station(name){
 		//TODO GENERATE HTML ELEMENT AND ADDED IN PRARENT
 	}
 }
-/*
-class Station {
-	constructor(name) {
-		this.name = name
-	}
-	compare(popBusA,popBusB) {
-		let cntA = popBusA.cntNextStation(this.name)
-		let cntB = popBusB.cntNextStation(this.name)
-		if(cntA > cntB) return 1
-		else if(cntA === cntB) {
-			if(popBusA.personCnt > popBusB.personCnt) return 1
-			else if(popBusA.personCnt < popBus.personCnt) return -1
-			else if(popBusA.personCnt === popBusB.personCnt) return 0
-		}
-	}
-	createHtmlElement(){
-		
-	}
-}*/
 
 function StationSelector(){
 	this.init = function(){
