@@ -4,13 +4,15 @@ window.onload = function(){
 	
 
 	// test
+	var siam = new Station("สยาม");
 	var pop = new PopBus(1,1,0,0,true,600,1200,"หอใน");
-	var pops = new PopBusInStation(1,pop);
-	pops.createHtmlElement(document.body);
+	siam.addPopBus(pop);
+	siam.createHtmlElement(document.body);
 	console.log(pop.cntNextStation("สยาม"));
 	setTimeout(function(){
 		pop.updateData(2,0,0,false,1100,"bbb");
-		pops.updateHtmlElement();}
+		siam.updateHtmlElement();
+	}
 	,5000);
 }
 
@@ -21,6 +23,8 @@ const stationName2 = ["aaa","bbb"];
 const stationName3 = ["ccc","ddd"];
 const stationName4 = ["fff","ggg"];
 const stationName5 = ["hhh","iii"];
+
+var curId = 0;
 
 function setProgress(id,value) {
 	let pro = document.getElementById(id);
@@ -133,15 +137,20 @@ class PopBusInStation {
 		info.id = this.id+"info";
 		div.appendChild(info);
 		root.appendChild(div);
-		this.updateProgressBar();
 	}
 }
 
 
 class Station{
+
 	constructor(name){
 		this.name = name;
 		this.popBusQueue = [];
+	}
+
+	addPopBus(popBus){
+		var tmp = new PopBusInStation(curId++,popBus)
+		this.popBusQueue.push(tmp);
 	}
 	
 	compare(popBusA,popBusb){
@@ -159,18 +168,25 @@ class Station{
 		}
 	}
 
+	updateHtmlElement(){
+		for(let i=0;i<this.popBusQueue.length;i++){
+			this.popBusQueue[i].updateHtmlElement();
+		}
+	}
+
 	createHtmlElement(root){
 		var div = document.createElement("div");
-		div.className = "popBusBroder";
+		div.className = "stationBroder";
 		div.id = this.name;
 		var title = document.createElement("h2");
 		title.className = "stationTitle";
-		title.innerHTML = "สถาณี "+this.name;
+		title.innerHTML = "สถานี : "+this.name;
 		div.appendChild(title);
-		for(let i=0;i<popBusQueue.length;i++){
-
+		for(let i=0;i<this.popBusQueue.length;i++){
+			this.popBusQueue[i].createHtmlElement(div);
 		}
 		root.appendChild(div);
+		this.updateHtmlElement();
 		//TODO GENERATE HTML ELEMENT AND ADDED IN PRARENT
 	}
 }
