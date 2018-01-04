@@ -5,7 +5,9 @@ window.onload = function(){
 	var siam = addNewStation("สยาม");
 	var siam2 = addNewStation("สยาม2");
 	var pop = addNewPopBus(1,1,0,0,true,600,1200,"หอใน");
+    var pop1 = addNewPopBus(2,1,0,0,true,600,1200,"สยาม");
 	siam.addPopBus(pop);
+    siam.addPopBus(pop1);
 	
 	console.log(pop.cntNextStation("สยาม"));
 	setTimeout(function(){
