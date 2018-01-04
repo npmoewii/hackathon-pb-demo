@@ -8,12 +8,8 @@ window.onload = function(){
 		for(let i=0;i<station.length;i++){
 			station[i].updateHtmlElement();
 		}
-
-	}
-	,500);
-
+	},500);
 	var selector = new StationSelector(station);
-
 }
 
 // FUNCTION
@@ -185,8 +181,8 @@ function updatePopBusDataFromApi(){
 	 	success: (data,textStatus,req) => {
 	 		for(let i=0;i<data.data.length;i++){
 	 			popbus[data.data[i].id-1].line = data.data[i].line;
-	 			popbus[data.data[i].id-1].latitude = data.data.latitude;
-	 			popbus[data.data[i].id-1].longitude = data.data.longitude;
+	 			popbus[data.data[i].id-1].lat = data.data[i].latitude;
+	 			popbus[data.data[i].id-1].long = data.data[i].longitude;
 	 		}
 	 	},
 	 	error: () => {
@@ -421,21 +417,6 @@ class Station{
 			popBusQueue[i].setProgressZero();
 		}
 	}
-	/*
-	compare(popBusA,popBusb){
-		let cntA = popBusA.cntNextStation(this.name);
-		let cntB = popBusB.cntNextStation(this.name);
-		if(cntA === -1 && cntB === -1) return 0;
-		else if(cntA === -1) return 1;
-		else if(cntB === -1) return -1;
-		if(cntA > cntB) return 1;
-		else if(cntA < cntB) return -1;
-		else if(cntA === cntB){
-			if(popBusA.personCnt > popBusB.personCnt) return 1;
-			else if(popBusA.personCnt < popBusB.personCnt) return -1;	
-			else if(popBusA.personCnt === popBusB.personCnt) return 0;
-		}
-	}*/
 
 	compare(popBusA,popBusB){
 		let station = getCurStation()
