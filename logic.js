@@ -10,7 +10,7 @@ window.onload = function(){
     var pop1 = addNewPopBus(3,1,10,10,true,600,1200,siam);
 	siam.addPopBus(pop);
     siam.addPopBus(pop1);
-    
+
 	console.log(pop.cntNextStation("สยาม"));
 	setTimeout(function(){
 		pop.updateData(2,0,0,false,1100,siam);
@@ -132,8 +132,8 @@ function hideAllStation(){
 	}
 }
 
-function addNewStation(name,lat,long){
-	let tmp = new Station(name,lat,long);
+function addNewStation(name,lat,long,line){
+	let tmp = new Station(name,lat,long,line);
 	station.push(tmp);
 	tmp.createHtmlElement(document.body);
 	return tmp;
@@ -165,7 +165,8 @@ function getStationFormApi(user,key){
 	 	},
 	 	success: (data,textStatus,req) => {
 	 		for(let i = 0;i<data.data.length;i++){
-				var tmp = addNewStation(data.data[i].name);
+				var tmp = addNewStation(data.data[i].name,data.data[i].latitude,data.data[i].longitude,data.data[i].line);
+				console.log(tmp);
 			}
 			selector = initSelector();
 	 	},
@@ -348,11 +349,12 @@ class PopBusInStation {
 
 class Station{
 
-	constructor(name,lat,long){
+	constructor(name,lat,long,line){
 		this.name = name;
 		this.popBusQueue = [];
 		this.lat = lat;
 		this.long = long;
+		this.line = line;
 	}
 
 	addPopBus(popBus){
