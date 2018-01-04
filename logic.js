@@ -287,6 +287,7 @@ class PopBus {
 		this.personCnt = Math.floor(weight/60);
 	}
 	measureWithStation(station){
+		this.station = station;
 		console.log(station.lat + " Long: " + station.long);
 		return measure(this.lat,this.long,station.lat,station.long);
 	}
@@ -381,8 +382,10 @@ class Station{
 	}*/
 
 	compare(popBusA,popBusB){
-		let lenA = popBusA.popbus.measureWithStation(popBusA.popbus.station);
-		let lenB = popBusB.popbus.measureWithStation(popBusB.popbus.station);
+		let station = getCurStation()
+		if(station===null) return true
+		let lenA = popBusA.popbus.measureWithStation(station);
+		let lenB = popBusB.popbus.measureWithStation(station);
 		if(lenA===lenB) {
 			for(let i=0;i<6;i++){
 				if(popBusA.line[i]!==popBusB.line[i]){
