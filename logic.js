@@ -1,21 +1,9 @@
 window.onload = function(){
-	let stationInfo = getStationFormApi(user,key);
-	let posInfo = getPopBusDataFromApi(user,key);
-	
-	// test
-
-	//for()
-	// var siam = addNewStation("สยาม",13.73,103.4,[1]);
-	// var siam2 = addNewStation("สยาม2",13.74,103.4,[1]);
-	// var pop = addNewPopBus(1,1,100,100,true,600,1200,siam);
- //    var pop1 = addNewPopBus(3,1,10,10,true,600,1200,siam);
-	// siam.addPopBus(pop);
- //    siam.addPopBus(pop1);
-
-//	console.log(pop.cntNextStation("สยาม"));
+	getStationFormApi(user,key);
+	setTimeout(function(){
+		getPopBusDataFromApi(user,key);
+	},100);
 	setInterval(function(){
-		//pop.updateData(2,0,0,false,1100,siam);
-		//siam.updateHtmlElement();
 		updatePopBusDataFromApi();
 		for(let i=0;i<station.length;i++){
 			station[i].updateHtmlElement();
