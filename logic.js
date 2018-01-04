@@ -8,9 +8,6 @@ window.onload = function(){
 	var siam2 = addNewStation("สยาม2",13.74,103.4);
 	var pop = addNewPopBus(1,1,100,100,true,600,1200,siam);
     var pop1 = addNewPopBus(3,1,10,10,true,600,1200,siam);
-	var siam = addNewStation("สยาม");
-	var siam2 = addNewStation("สยาม2");
-	var pop = addNewPopBus(1,1,0,0,true,600,1200,"หอใน");
 	siam.addPopBus(pop);
 	
 	console.log(pop.cntNextStation("สยาม"));
