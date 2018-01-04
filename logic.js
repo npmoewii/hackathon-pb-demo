@@ -1,6 +1,7 @@
 window.onload = function(){
-
+	getDataFromApi("http://45.76.188.63:3000/get/stations","wsvnlq0s","iBPqfYnJLjDsjZfK1oPagJ1GCmM8gcyb");
 	// test
+	//for()
 	var siam = addNewStation("สยาม");
 	var siam2 = addNewStation("สยาม2");
 	var pop = addNewPopBus(1,1,0,0,true,600,1200,"หอใน");
@@ -16,10 +17,13 @@ window.onload = function(){
 	var selector = new StationSelector(station);
 	selector.init();
 	selector.createHtmlElement(document.body);	
-
 }
 
 // FUNCTION
+
+const url = "http://45.76.188.63:3000/"; 
+const user = "wsvnlq0s";
+const key = "iBPqfYnJLjDsjZfK1oPagJ1GCmM8gcyb";
 
 const stationName1 = ["สยาม","ศาลาพระเกี้ยว","หอใน"];
 const stationName2 = ["aaa","bbb"];
@@ -62,6 +66,28 @@ function addNewPopBus(BusId,line,lat,long,status,weight,maxWeight,station){
 	let tmp = new PopBus(BusId,line,lat,long,status,weight,maxWeight,station);
 	popbus.push(tmp);
 	return tmp;
+}
+
+function getDataFromApi(path,user,key){
+	$.ajax({
+	 	url: path,
+	 	type: "POST",
+	 	data:{
+	 		busnumber: null,
+	 		busid: "1"
+	 	},
+	 	beforeSend: (xhr) => {
+	 		xhr.setRequestHeader('Client-ID',user);
+	 		xhr.setRequestHeader('Client-Secret',key);
+	 	},
+	 	success: (data,textStatus,req) => {
+	 		console.log(data);
+	 		return data;
+	 	},
+	 	error: () => {
+	 		console.log("error");
+	 	}
+	})
 }
 
 // CLASS
