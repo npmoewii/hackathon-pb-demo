@@ -1,13 +1,12 @@
 window.onload = function(){
-	getDataFromApi("http://45.76.188.63:3000/get/stations","wsvnlq0s","iBPqfYnJLjDsjZfK1oPagJ1GCmM8gcyb");
+	let stationInfo = getStationFormApi(user,key);
+	let posInfo = getPopBusDataFromApi(user,key);
+	
 	// test
-	//for()
 	var siam = addNewStation("สยาม");
 	var siam2 = addNewStation("สยาม2");
 	var pop = addNewPopBus(1,1,0,0,true,600,1200,"หอใน");
-    var pop1 = addNewPopBus(2,1,0,0,true,600,1200,"สยาม");
 	siam.addPopBus(pop);
-    siam.addPopBus(pop1);
 	
 	console.log(pop.cntNextStation("สยาม"));
 	setTimeout(function(){
@@ -15,15 +14,11 @@ window.onload = function(){
 		siam.updateHtmlElement();
 	}
 	,5000);
-
-	var selector = new StationSelector(station);
-	selector.init();
-	selector.createHtmlElement(document.body);	
 }
 
 // FUNCTION
 
-const url = "http://45.76.188.63:3000/"; 
+const url = "http://45.76.188.63:3000"; 
 const user = "wsvnlq0s";
 const key = "iBPqfYnJLjDsjZfK1oPagJ1GCmM8gcyb";
 
@@ -37,6 +32,12 @@ var curId = 0;
 var station = [];
 var popbus = [];
 
+function initSelector(){
+	console.log(station);
+	var selector = new StationSelector(station);
+	selector.init();
+	selector.createHtmlElement(document.body);	
+}
 
 function setProgress(id,value) {
 	let pro = document.getElementById(id);
@@ -70,9 +71,9 @@ function addNewPopBus(BusId,line,lat,long,status,weight,maxWeight,station){
 	return tmp;
 }
 
-function getDataFromApi(path,user,key){
+function getStationFormApi(user,key){
 	$.ajax({
-	 	url: path,
+	 	url: url+"/get/stations",
 	 	type: "POST",
 	 	data:{
 	 		busnumber: null,
@@ -83,8 +84,35 @@ function getDataFromApi(path,user,key){
 	 		xhr.setRequestHeader('Client-Secret',key);
 	 	},
 	 	success: (data,textStatus,req) => {
-	 		console.log(data);
-	 		return data;
+	 		console.log(data.data);
+	 		for(let i = 0;i<data.data.length;i++){
+				var tmp = addNewStation(data.data[i].name);
+			}
+			initSelector();
+	 	},
+	 	error: () => {
+	 		console.log("error");
+	 	}
+	})
+	
+}
+
+function getPopBusDataFromApi(user,key){
+	$.ajax({
+	 	url: url+"/get/position",
+	 	type: "POST",
+	 	data:{
+	 		busnumber: null,
+	 		busid: "1"
+	 	},
+	 	beforeSend: (xhr) => {
+	 		xhr.setRequestHeader('Client-ID',user);
+	 		xhr.setRequestHeader('Client-Secret',key);
+	 	},
+	 	success: (data,textStatus,req) => {
+	 		for(let i=0;i<data.data.length;i++){
+	 			addNewPopBus(data.data[i].id,data.data[i].line,data.data[i].latitude,data.data[i].longitude,true,null,null,null);
+	 		}
 	 	},
 	 	error: () => {
 	 		console.log("error");
