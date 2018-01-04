@@ -34,10 +34,13 @@ var curId = 0;
 var station = [];
 var popbus = [];
 
+var selector;
+
 function initSelector(){
 	var selector = new StationSelector(station);
 	selector.init();
-	selector.createHtmlElement(document.body);	
+	selector.createHtmlElement(document.body);
+	return selector;	
 }
 
 function setProgress(id,value) {
@@ -66,6 +69,11 @@ function addNewStation(name,lat,long){
 	return tmp;
 }
 
+function getCurStation(){
+	let e = document.getElementById("select");
+	return selector.station[e.selectedIndex];
+}
+
 function addNewPopBus(BusId,line,lat,long,status,weight,maxWeight,station){
 	let tmp = new PopBus(BusId,line,lat,long,status,weight,maxWeight,station);
 	popbus.push(tmp);
@@ -88,7 +96,7 @@ function getStationFormApi(user,key){
 	 		for(let i = 0;i<data.data.length;i++){
 				var tmp = addNewStation(data.data[i].name);
 			}
-			initSelector();
+			selector = initSelector();
 	 	},
 	 	error: () => {
 	 		console.log("error");
@@ -187,7 +195,7 @@ class PopBus {
 	}
 	cntNextStation(name) {
 		let cnt = 0;
-		let start = this.findPos(this.station);
+		let start = this.findPos(this.station.name);
 		let stationName = this.getStationLine();
 		if(start === -1) return -1;
 		while(cnt < stationName.length){
@@ -380,6 +388,7 @@ class StationSelector{
 			tmp.text = this.station[i].name;
 			sel.appendChild(tmp);
 		}
+
 		div.appendChild(sel);
 		root.insertBefore(div,root.childNodes[2]);
 	}
