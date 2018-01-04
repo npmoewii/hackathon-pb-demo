@@ -1,23 +1,28 @@
 window.onload = function(){
 	let stationInfo = getStationFormApi(user,key);
 	let posInfo = getPopBusDataFromApi(user,key);
+	
 	// test
 
 	//for()
-	var siam = addNewStation("สยาม",13.73,103.4);
-	var siam2 = addNewStation("สยาม2",13.74,103.4);
-	var pop = addNewPopBus(1,1,100,100,true,600,1200,siam);
-    var pop1 = addNewPopBus(3,1,10,10,true,600,1200,siam);
-	siam.addPopBus(pop);
-    siam.addPopBus(pop1);
+	// var siam = addNewStation("สยาม",13.73,103.4,[1]);
+	// var siam2 = addNewStation("สยาม2",13.74,103.4,[1]);
+	// var pop = addNewPopBus(1,1,100,100,true,600,1200,siam);
+ //    var pop1 = addNewPopBus(3,1,10,10,true,600,1200,siam);
+	// siam.addPopBus(pop);
+ //    siam.addPopBus(pop1);
 
-	console.log(pop.cntNextStation("สยาม"));
-	setTimeout(function(){
-		pop.updateData(2,0,0,false,1100,siam);
-		siam.updateHtmlElement();
-		
+//	console.log(pop.cntNextStation("สยาม"));
+	setInterval(function(){
+		//pop.updateData(2,0,0,false,1100,siam);
+		//siam.updateHtmlElement();
+		updatePopBusDataFromApi();
+		for(let i=0;i<station.length;i++){
+			station[i].updateHtmlElement();
+		}
+
 	}
-	,5000);
+	,500);
 
 	var selector = new StationSelector(station);
 
@@ -151,6 +156,7 @@ function addNewPopBus(BusId,line,lat,long,status,weight,maxWeight,station){
 	return tmp;
 }
 
+
 function getStationFormApi(user,key){
 	$.ajax({
 	 	url: url+"/get/stations",
@@ -166,7 +172,6 @@ function getStationFormApi(user,key){
 	 	success: (data,textStatus,req) => {
 	 		for(let i = 0;i<data.data.length;i++){
 				var tmp = addNewStation(data.data[i].name,data.data[i].latitude,data.data[i].longitude,data.data[i].line);
-				console.log(tmp);
 			}
 			selector = initSelector();
 	 	},
@@ -175,6 +180,53 @@ function getStationFormApi(user,key){
 	 	}
 	})
 	
+}
+
+function updatePopBusDataFromApi(){
+	$.ajax({
+	 	url: url+"/get/position",
+	 	type: "POST",
+	 	data:{
+	 		busnumber: null,
+	 		busid: "1"
+	 	},
+	 	beforeSend: (xhr) => {
+	 		xhr.setRequestHeader('Client-ID',user);
+	 		xhr.setRequestHeader('Client-Secret',key);
+	 	},
+	 	success: (data,textStatus,req) => {
+	 		for(let i=0;i<data.data.length;i++){
+	 			popbus[data.data[i].id-1].line = data.data[i].line;
+	 			popbus[data.data[i].id-1].latitude = data.data.latitude;
+	 			popbus[data.data[i].id-1].longitude = data.data.longitude;
+	 		}
+	 	},
+	 	error: () => {
+	 		console.log("error");
+	 	}
+	}).then(function(){
+		$.ajax({
+	 		url: url+"/get/weight",
+	 		type: "POST",
+	 		data:{
+	 			busnumber: null,
+	 			busid: "1"
+	 		},
+	 		beforeSend: (xhr) => {
+	 			xhr.setRequestHeader('Client-ID',user);
+	 			xhr.setRequestHeader('Client-Secret',key);
+	 		},
+	 		success: (data,textStatus,req) => {
+	 			for(let i=0;i<data.data.length;i++){
+	 				popbus[data.data[i].id-1].personCnt = Math.floor((data.data[i].currentWeight - data.data[i].minWeight)/60);
+	 				popbus[data.data[i].id-1].maxPersonCnt = Math.floor((data.data[i].maxWeight - data.data[i].minWeight)/60);	
+	 			}
+	 		},
+	 		error: () => {
+	 			console.log("error");
+	 		}	
+		})
+	})
 }
 
 function getPopBusDataFromApi(user,key){
@@ -211,10 +263,10 @@ function getPopBusDataFromApi(user,key){
 	 		},
 	 		success: (data,textStatus,req) => {
 	 			for(let i=0;i<data.data.length;i++){
-	 				popbus[data.data[i].id].personCnt = Math.floor((data.data[i].currentWeight - data.data[i].minWeight)/60);
-	 				popbus[data.data[i].id].maxPersonCnt = Math.floor((data.data[i].maxWeight - data.data[i].minWeight)/60);	
+	 				console.log(popbus[data.data[i].id-1]);
+	 				popbus[data.data[i].id-1].personCnt = Math.floor((data.data[i].currentWeight - data.data[i].minWeight)/60);
+	 				popbus[data.data[i].id-1].maxPersonCnt = Math.floor((data.data[i].maxWeight - data.data[i].minWeight)/60);	
 	 			}
-	 			console.log(popbus);
 	 		},
 	 		error: () => {
 	 			console.log("error");
@@ -222,6 +274,13 @@ function getPopBusDataFromApi(user,key){
 		})
 	}).then(function(){
 		loadDataFromApi = true;
+		for(let i=0;i<popbus.length;i++){
+			for(let j=0;j<station.length;j++){
+				if(station[j].line.indexOf(popbus[i].line) > -1){
+					station[j].addPopBus(popbus[i]);
+				}
+			}
+		}
 	})
 }
 
@@ -288,7 +347,6 @@ class PopBus {
 	}
 	measureWithStation(station){
 		this.station = station;
-		console.log(station.lat + " Long: " + station.long);
 		return measure(this.lat,this.long,station.lat,station.long);
 	}
 }
@@ -299,6 +357,11 @@ class PopBusInStation {
 		this.popbus = popbus;
 		this.wasCreate = false;
 
+	}
+
+	setProgressZero(){
+		let pro = document.getElementById(this.id+"bar");
+		pro.style.width = 0;
 	}
 	
 	updateProgressBar(){
@@ -364,7 +427,12 @@ class Station{
 		this.updateHtmlElement();
 		tmp.updateProgressBar();
 	}
-	
+
+	setProgressZero(){
+		for(let i=0;i<popBusQueue.length;i++){
+			popBusQueue[i].setProgressZero();
+		}
+	}
 	/*
 	compare(popBusA,popBusb){
 		let cntA = popBusA.cntNextStation(this.name);
@@ -388,13 +456,12 @@ class Station{
 		let lenB = popBusB.popbus.measureWithStation(station);
 		if(lenA===lenB) {
 			for(let i=0;i<6;i++){
-				if(popBusA.line[i]!==popBusB.line[i]){
-					return popBusA.line[i] < popBusB.line[i] ? 1 : -1
+				if(popBusA.popbus.line[i]!==popBusB.popbus.line[i]){
+					return popBusA.popbus.line[i] < popBusB.popbus.line[i] ? 1 : -1
 				}
 			}
 			return 0
 		}
-		console.log(lenA + " : " + lenB);
 		return lenA < lenB ? -1 : 1;
 	}
 
@@ -448,6 +515,7 @@ class StationSelector{
 			let e = document.getElementById("select");
 			let selected = e.options[e.selectedIndex].value;
 			hideAllStation();
+			
 			let tar = document.getElementById(selected);
 			tar.style.display = "block";
 		},false);
