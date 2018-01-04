@@ -1,5 +1,6 @@
 window.onload = function(){
-
+	let stationInfo = getStationFormApi(user,key);
+	let posInfo = getPopBusDataFromApi(user,key);
 	// test
 
 	//for()
@@ -14,14 +15,11 @@ window.onload = function(){
 	setTimeout(function(){
 		pop.updateData(2,0,0,false,1100,siam);
 		siam.updateHtmlElement();
+		console.log(getCurStation());
 	}
 	,5000);
 
 	var selector = new StationSelector(station);
-	selector.init();
-	selector.createHtmlElement(document.body);	
-
-	
 
 }
 
@@ -96,6 +94,10 @@ const stationName5 = 	["Salaprakeaw",
 						 "Faculty of Architecture",
 						 "Faculty of Arts",
 						 "Faculty of Engineering"];
+
+const url = "http://45.76.188.63:3000"; 
+const user = "wsvnlq0s";
+const key = "iBPqfYnJLjDsjZfK1oPagJ1GCmM8gcyb";
 
 var curId = 0;
 var station = [];
@@ -308,8 +310,7 @@ class PopBusInStation {
 		this.updateProgressBar();
 	}
 
-	createHtm
-	lElement(root){
+	createHtmlElement(root){
 		this.wasCreate = true;
 		var div = document.createElement("div");
 		div.className = "popBusBroder";
