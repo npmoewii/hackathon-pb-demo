@@ -187,7 +187,7 @@ class PopBus {
 	}
 	cntNextStation(name) {
 		let cnt = 0;
-		let start = this.findPos(this.station);
+		let start = this.findPos(this.station.name);
 		let stationName = this.getStationLine();
 		if(start === -1) return -1;
 		while(cnt < stationName.length){
@@ -205,6 +205,7 @@ class PopBus {
 		this.personCnt = Math.floor(weight/60);
 	}
 	measureWithStation(station){
+		this.station = station;
 		console.log(station.lat + " Long: " + station.long);
 		return measure(this.lat,this.long,station.lat,station.long);
 	}
