@@ -33,7 +33,6 @@ var station = [];
 var popbus = [];
 
 function initSelector(){
-	console.log(station);
 	var selector = new StationSelector(station);
 	selector.init();
 	selector.createHtmlElement(document.body);	
@@ -84,7 +83,6 @@ function getStationFormApi(user,key){
 	 		xhr.setRequestHeader('Client-Secret',key);
 	 	},
 	 	success: (data,textStatus,req) => {
-	 		console.log(data.data);
 	 		for(let i = 0;i<data.data.length;i++){
 				var tmp = addNewStation(data.data[i].name);
 			}
@@ -117,6 +115,29 @@ function getPopBusDataFromApi(user,key){
 	 	error: () => {
 	 		console.log("error");
 	 	}
+	}).then(function(){
+		$.ajax({
+	 		url: url+"/get/weight",
+	 		type: "POST",
+	 		data:{
+	 			busnumber: null,
+	 			busid: "1"
+	 		},
+	 		beforeSend: (xhr) => {
+	 			xhr.setRequestHeader('Client-ID',user);
+	 			xhr.setRequestHeader('Client-Secret',key);
+	 		},
+	 		success: (data,textStatus,req) => {
+	 			for(let i=0;i<data.data.length;i++){
+	 				popbus[data.data[i].id].personCnt = Math.floor((data.data[i].currentWeight - data.data[i].minWeight)/60);
+	 				popbus[data.data[i].id].maxPersonCnt = Math.floor((data.data[i].maxWeight - data.data[i].minWeight)/60);	
+	 			}
+	 			console.log(popbus);
+	 		},
+	 		error: () => {
+	 			console.log("error");
+	 		}	
+		})
 	})
 }
 
