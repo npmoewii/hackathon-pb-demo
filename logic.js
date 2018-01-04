@@ -420,12 +420,16 @@ class Station{
 		let lenA = popBusA.popbus.measureWithStation(station);
 		let lenB = popBusB.popbus.measureWithStation(station);
 		if(lenA===lenB) {
+			/*
 			for(let i=0;i<6;i++){
 				if(popBusA.popbus.line[i]!==popBusB.popbus.line[i]){
 					return popBusA.popbus.line[i] < popBusB.popbus.line[i] ? 1 : -1
 				}
+			}*/
+			if(popBusA.popbus.personCnt===popBusB.popbus.personCnt){
+				return 0;
 			}
-			return 0
+			return popBusA.popbus.personCnt < popBusB.popbus.personCnt ? 1 : -1;
 		}
 		return lenA < lenB ? -1 : 1;
 	}
