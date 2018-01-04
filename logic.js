@@ -1,12 +1,12 @@
 window.onload = function(){
-	let stationInfo = getStationFormApi(user,key);
-	let posInfo = getPopBusDataFromApi(user,key);
-	
+
 	// test
 	var siam = addNewStation("สยาม");
 	var siam2 = addNewStation("สยาม2");
 	var pop = addNewPopBus(1,1,0,0,true,600,1200,"หอใน");
+    var pop1 = addNewPopBus(2,1,0,0,true,600,1200,"สยาม");
 	siam.addPopBus(pop);
+    siam.addPopBus(pop1);
 	
 	console.log(pop.cntNextStation("สยาม"));
 	setTimeout(function(){
@@ -14,30 +14,91 @@ window.onload = function(){
 		siam.updateHtmlElement();
 	}
 	,5000);
+
+	var selector = new StationSelector(station);
+	selector.init();
+	selector.createHtmlElement(document.body);	
+
+	
+
 }
 
 // FUNCTION
 
-const url = "http://45.76.188.63:3000"; 
-const user = "wsvnlq0s";
-const key = "iBPqfYnJLjDsjZfK1oPagJ1GCmM8gcyb";
-
-const stationName1 = ["สยาม","ศาลาพระเกี้ยว","หอใน"];
-const stationName2 = ["aaa","bbb"];
-const stationName3 = ["ccc","ddd"];
-const stationName4 = ["fff","ggg"];
-const stationName5 = ["hhh","iii"];
+const stationName1 = 	["Salaprakeaw",
+						 "Faculty of Political Science",
+						 "Patumwan Demonstration School",
+						 "Faculty of Veterinary Science",
+						 "Chaloemphao Junction",
+						 "Lido",
+						 "MBK Center",
+						 "Triamudom Suksa School",
+						 "Faculty of Architecture",
+						 "Faculty of Arts",
+						 "Faculty of Engineering"];
+const stationName2 = 	["Salaprakeaw",
+						 "Mahitaladhibesra Building",
+ 						 "Mahamakut Building",
+						 "Faculty of Science",
+						 "Faculty of Education",
+						 "Sport Complex",
+						 "Charmchuri 9 Building",
+						 "CU Dharma Centre",
+						 "CU Dormitory",
+						 "x chamchuri 10",
+						 "x allied health science",
+						 "x bts",
+						 "Faculty of Sports Science",
+						 "x allied health science",
+						 "x chamchuri 10",
+						 "CU Dormitory",
+						 "CU Office",
+						 "Faculty of Architecture",
+						 "Faculty of Arts",
+						 "Faculty of Engineering"];
+const stationName3 = 	["Salaprakeaw",
+						 "Mahitaladhibesra Building",
+						 "Faculty of Political Science",
+						 "Faculty of Medicine",
+						 "Faculty of Political Science",
+						 "Mahamakut Building",
+ 						 "Faculty of Science",
+						 "Faculty of Architecture",
+  						 "Faculty of Arts",
+						 "Faculty of Engineering"];
+const stationName4 = 	["Salaprakeaw",
+						 "Mahitaladhibesra Building",
+						 "Patumwan Demonstration School",
+						 "Faculty of Veterinary Science",
+						 "Chaloemphao Junction",
+						 "Lido",
+						 "MBK Center",
+						 "Triamudom Suksa School",
+						 "Faculty of Education",
+						 "Sport Complex",
+						 "Charmchuri 9 Building",
+						 "U-Center",
+						 "Faculty of Law",
+						 "Faculty of Architecture",
+						 "Faculty of Arts",
+						 "Faculty of Engineering"];
+const stationName5 = 	["Salaprakeaw",
+						 "Faculty of Political Science",
+						 "Mahamakut Building",
+						 "Faculty of Science",
+						 "x communication arts",
+						 "x samyan market",
+						 "x i'm park",
+						 "CU Terrace",
+						 "CU Office",
+						 "Faculty of Architecture",
+						 "Faculty of Arts",
+						 "Faculty of Engineering"];
 
 var curId = 0;
 var station = [];
 var popbus = [];
 
-function initSelector(){
-	console.log(station);
-	var selector = new StationSelector(station);
-	selector.init();
-	selector.createHtmlElement(document.body);	
-}
 
 function setProgress(id,value) {
 	let pro = document.getElementById(id);
@@ -69,55 +130,6 @@ function addNewPopBus(BusId,line,lat,long,status,weight,maxWeight,station){
 	let tmp = new PopBus(BusId,line,lat,long,status,weight,maxWeight,station);
 	popbus.push(tmp);
 	return tmp;
-}
-
-function getStationFormApi(user,key){
-	$.ajax({
-	 	url: url+"/get/stations",
-	 	type: "POST",
-	 	data:{
-	 		busnumber: null,
-	 		busid: "1"
-	 	},
-	 	beforeSend: (xhr) => {
-	 		xhr.setRequestHeader('Client-ID',user);
-	 		xhr.setRequestHeader('Client-Secret',key);
-	 	},
-	 	success: (data,textStatus,req) => {
-	 		console.log(data.data);
-	 		for(let i = 0;i<data.data.length;i++){
-				var tmp = addNewStation(data.data[i].name);
-			}
-			initSelector();
-	 	},
-	 	error: () => {
-	 		console.log("error");
-	 	}
-	})
-	
-}
-
-function getPopBusDataFromApi(user,key){
-	$.ajax({
-	 	url: url+"/get/position",
-	 	type: "POST",
-	 	data:{
-	 		busnumber: null,
-	 		busid: "1"
-	 	},
-	 	beforeSend: (xhr) => {
-	 		xhr.setRequestHeader('Client-ID',user);
-	 		xhr.setRequestHeader('Client-Secret',key);
-	 	},
-	 	success: (data,textStatus,req) => {
-	 		for(let i=0;i<data.data.length;i++){
-	 			addNewPopBus(data.data[i].id,data.data[i].line,data.data[i].latitude,data.data[i].longitude,true,null,null,null);
-	 		}
-	 	},
-	 	error: () => {
-	 		console.log("error");
-	 	}
-	})
 }
 
 // CLASS
@@ -194,7 +206,8 @@ class PopBusInStation {
 		this.updateProgressBar();
 	}
 
-	createHtmlElement(root){
+	createHtm
+	lElement(root){
 		this.wasCreate = true;
 		var div = document.createElement("div");
 		div.className = "popBusBroder";
