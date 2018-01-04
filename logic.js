@@ -440,13 +440,12 @@ class Station{
 
 	updateHtmlElement(){
 		var div = document.getElementById(this.name);
+		for(let i=0;i<this.popBusQueue.length;i++){
+			if(this.popBusQueue[i].wasCreate){
+				$("#" + getCurStation.name).find("popBusBroder").remove()
+			}
+		}
 		this.popBusQueue.sort(this.compare);
-		setTimeout(()=>{
-			console.log(this.popBusQueue.length);
-			this.popBusQueue.forEach((e) => {
-				console.log(e.line + ": " + e.measureWithStation(getCurStation()));
-			})
-		},3000)
 		for(let i=0;i<this.popBusQueue.length;i++){
 			if(!this.popBusQueue[i].wasCreate){
 				this.popBusQueue[i].createHtmlElement(div);
