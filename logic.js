@@ -10,12 +10,12 @@ window.onload = function(){
     var pop1 = addNewPopBus(3,1,10,10,true,600,1200,siam);
 	siam.addPopBus(pop);
     siam.addPopBus(pop1);
-	
+    
 	console.log(pop.cntNextStation("สยาม"));
 	setTimeout(function(){
 		pop.updateData(2,0,0,false,1100,siam);
 		siam.updateHtmlElement();
-		console.log(getCurStation());
+		
 	}
 	,5000);
 
@@ -104,6 +104,7 @@ var station = [];
 var popbus = [];
 
 var selector;
+var loadDataFromApi = false;
 
 function initSelector(){
 	var selector = new StationSelector(station);
@@ -139,6 +140,7 @@ function addNewStation(name,lat,long){
 }
 
 function getCurStation(){
+	if(!loadDataFromApi) return null;
 	let e = document.getElementById("select");
 	return selector.station[e.selectedIndex];
 }
@@ -217,6 +219,8 @@ function getPopBusDataFromApi(user,key){
 	 			console.log("error");
 	 		}	
 		})
+	}).then(function(){
+		loadDataFromApi = true;
 	})
 }
 
