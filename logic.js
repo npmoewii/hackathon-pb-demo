@@ -8,7 +8,7 @@ window.onload = function(){
 		for(let i=0;i<station.length;i++){
 			station[i].updateHtmlElement();
 		}
-	},500);
+	},1000);
 	var selector = new StationSelector(station);
 }
 
@@ -342,14 +342,9 @@ class PopBusInStation {
 		this.wasCreate = false;
 
 	}
-
-	setProgressZero(){
-		let pro = document.getElementById(this.id+"bar");
-		pro.style.width = 0;
-	}
 	
 	updateProgressBar(){
-		setProgress(this.id+"bar",this.popbus.personCnt/this.popbus.maxPersonCnt*100);
+		setProgress(this.id+"bar",Math.floor(this.popbus.personCnt/this.popbus.maxPersonCnt*100));
 	}
 
 	updateHtmlElement(){
@@ -392,6 +387,13 @@ class PopBusInStation {
 		div.appendChild(info);
 		root.appendChild(div);
 	}
+
+	createHtmlElementNonAnimate(root){
+		this.createHtmlElement(root);
+		let pro = document.getElementById(this.id+"bar");
+		let val = Math.floor(this.popbus.personCnt/this.popbus.maxPersonCnt*100);
+		pro.style.width = val + '%';
+	}
 }
 
 
@@ -412,12 +414,6 @@ class Station{
 		tmp.updateProgressBar();
 	}
 
-	setProgressZero(){
-		for(let i=0;i<popBusQueue.length;i++){
-			popBusQueue[i].setProgressZero();
-		}
-	}
-
 	compare(popBusA,popBusB){
 		let station = getCurStation()
 		if(station===null) return true
@@ -436,12 +432,21 @@ class Station{
 
 	updateHtmlElement(){
 		var div = document.getElementById(this.name);
+		div.innerHTML = "";
+		var title = document.createElement("h2");
+		title.className = "stationTitle";
+		title.innerHTML = "สถานี : "+this.name;
+		div.appendChild(title);
 		this.popBusQueue.sort(this.compare);
 		for(let i=0;i<this.popBusQueue.length;i++){
-			if(!this.popBusQueue[i].wasCreate){
-				this.popBusQueue[i].createHtmlElement(div);
+			if(this.popBusQueue[i].wasCreate){
+				this.popBusQueue[i].createHtmlElementNonAnimate(div);
 			}
-			this.popBusQueue[i].updateHtmlElement();
+			else{
+				this.popBusQueue[i].createHtmlElement(div);
+				this.popBusQueue[i].updateHtmlElement();
+				console.log("helo");	
+			}
 		}
 	}
 
@@ -449,13 +454,6 @@ class Station{
 		var div = document.createElement("div");
 		div.className = "stationBroder";
 		div.id = this.name;
-		var title = document.createElement("h2");
-		title.className = "stationTitle";
-		title.innerHTML = "สถานี : "+this.name;
-		div.appendChild(title);
-		for(let i=0;i<this.popBusQueue.length;i++){
-			this.popBusQueue[i].createHtmlElement(div);
-		}
 		root.appendChild(div);
 		this.updateHtmlElement();
 		//TODO GENERATE HTML ELEMENT AND ADDED IN PRARENT
